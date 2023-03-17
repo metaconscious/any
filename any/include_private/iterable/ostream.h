@@ -5,18 +5,19 @@
 #ifndef ITERABLE_OSTREAM_H
 #define ITERABLE_OSTREAM_H
 
-#include <concepts>
 #include "concepts/streamable.h"
+#include "ranges/iterable.h"
+#include <ostream>
 
 namespace any::ios
 {
-    template<std::ranges::range T>
-    requires any::is_streamable_v<std::ranges::range_value_t<T>>
+    template<any::ranges::iterable T>
+    requires any::is_streamable_v<any::ranges::range_value_t<T>>
     std::ostream& operator<<(std::ostream& os, const T& iterable)
     {
-        for (auto&& e: iterable)
+        for (auto iter{ iterable.begin() }; iter != iterable.end(); ++iter)
         {
-            os << e << ' ';
+            os << *iter << ' ';
         }
         return os;
     }
